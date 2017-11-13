@@ -12,7 +12,7 @@ export function createStore () {
     },
     mutations: {
       setItem (state, item) {
-        // state.items.push(item)
+        state.items.push(item)
         // Vue.set(state.items, id, item)
       }
     },

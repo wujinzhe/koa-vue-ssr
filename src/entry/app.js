@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from '../App.vue'
+import 'iview/dist/styles/iview.css'
 import { createRouter } from '../router'
 import { createStore } from '../store'
 import { sync } from 'vuex-router-sync'
