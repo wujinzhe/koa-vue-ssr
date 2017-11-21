@@ -5,8 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>服务器渲染</title>
+    <!-- 使用三花括号(triple-mustache)进行 HTML 不转义插值(non-HTML-escaped interpolation) -->
+    <!-- {{{ renderResourceHints() }}} -->
+    {{{ renderStyles() }}}
 </head>
 <body>
   <!--vue-ssr-outlet-->
+  {{{ renderState() }}}
+  {{{ renderScripts() }}}
 </body>
 </html>

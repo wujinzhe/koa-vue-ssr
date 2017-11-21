@@ -21,6 +21,7 @@ function createRenderer (bundle, options) {
     }),
     // this is only needed when vue-server-renderer is npm-linked
     basedir: resolve('./dist'),
+    inject: false,
     // recommended for performance
     runInNewContext: false
   }))
@@ -53,6 +54,9 @@ async function render (ctx, next) {
   let context = {url: ctx.url}
   let html = await new Promise((resolve, reject) => {
     renderer.renderToString(context, (err, html) => {
+      // context.title = '11111'
+      // console.log(context.renderStyles())
+      // console.log(context.renderScripts())
       if (err) {
         reject('404')
       } else {

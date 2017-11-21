@@ -1,12 +1,15 @@
 'use strict'
 
-const webpack = require('webpack')
 const path = require('path')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-
+const vueConfig = require('./vue-loader.config.js')
+const chalk = require('chalk')
 const isProd = process.env.NODE_ENV === 'production'
 
+chalk.enabled = true
+
 module.exports = {
+  devtool: isProd ? false : '#cheap-module-source-map',
   output: {
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/dist/',
@@ -17,12 +20,17 @@ module.exports = {
   },
   module: {
     rules: [
+      // {
+      //   test: /\.(vue|js)$/,
+      //   enforce: 'pre',
+      //   loader: 'eslint-loader',
+      //   exclude: /node_modules/
+      // },
       {
         test: /\.vue$/,
         loader: 'vue-loader',
-        // options: vueConfig
+        options: vueConfig
       },
-      { test: /iview.src.*?js$/, loader: 'babel-loader' },
       {
         test: /\.js$/,
         loader: 'babel-loader',
@@ -49,9 +57,9 @@ module.exports = {
           })
           : [
             'vue-style-loader',
-            { loader: 'css-loader'}
+            { loader: 'css-loader' }
           ]
-      },
+      }
     ]
-  },
+  }
 }
