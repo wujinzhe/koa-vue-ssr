@@ -2,6 +2,8 @@
 
 const path = require('path')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+const webpack = require('webpack')
 const vueConfig = require('./vue-loader.config.js')
 const chalk = require('chalk')
 const isProd = process.env.NODE_ENV === 'production'
@@ -52,7 +54,7 @@ module.exports = {
         test: /\.css$/,
         use: isProd
           ? ExtractTextPlugin.extract({
-            use: 'css-loader?minimize&importLoaders=1!postcss-loader',
+            use: 'css-loader',
             fallback: 'vue-style-loader'
           })
           : [
@@ -61,5 +63,17 @@ module.exports = {
           ]
       }
     ]
-  }
+  },
+  plugins: isProd
+  ? [
+    new webpack.optimize.UglifyJsPlugin({
+      compress: { warnings: false }
+    }),
+    new ExtractTextPlugin({
+      filename: 'common.[chunkhash].css'
+    })
+  ]
+  : [
+    new FriendlyErrorsPlugin()
+  ]
 }

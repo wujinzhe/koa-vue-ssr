@@ -37,6 +37,7 @@
     "css-loader": "^0.28.7",
     "extract-text-webpack-plugin": "^2.1.2",
     "file-loader": "^1.1.5",
+    "friendly-errors-webpack-plugin": "^1.6.1",
     "koa-webpack-middleware": "^1.0.7",
     "lru-cache": "^4.1.1",
     "memory-fs": "^0.4.1",
