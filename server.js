@@ -9,9 +9,10 @@ const favicon = require('koa-favicon')
 const resolve = file => path.resolve(__dirname, file)
 const static = require('koa-static')
 const { createBundleRenderer } = require('vue-server-renderer')
-
 const isProd = process.env.NODE_ENV === 'production'
-
+let cache= []
+let bundle = require('./dist/vue-ssr-server-bundle.json')   // 
+let clientManifest = require('./dist/vue-ssr-client-manifest.json')
 function createRenderer (bundle, options) {
   return createBundleRenderer(bundle, Object.assign(options, {
     // for component caching
@@ -33,8 +34,6 @@ const templatePath = resolve('./src/index.html')
 
 if (isProd) {  // 生产环境
   const template = fs.readFileSync(templatePath, 'utf-8')  // 读取模板文件
-  const bundle = require('./dist/vue-ssr-server-bundle.json')   // 
-  const clientManifest = require('./dist/vue-ssr-client-manifest.json')
   renderer = createRenderer (bundle, {
     template,
     clientManifest
@@ -57,6 +56,7 @@ async function render (ctx, next) {
       // context.title = '11111'
       // console.log(context.renderStyles())
       // console.log(context.renderScripts())
+      console.log(html)
       if (err) {
         reject('404')
       } else {
@@ -71,6 +71,21 @@ App.use(static('./dist'))
 // App.use(static('./public'))
 App.use(favicon('./public/icon.png'))
 
+router.get('/update', async (ctx, next) => {
+  let context = {url: '/'}
+  cache.push({bundle,clientManifest,date: new Date().getTime()})
+  delete require.cache[require.resolve('./dist/vue-ssr-server-bundle.json')]  // 
+  delete require.cache[require.resolve('./dist/vue-ssr-client-manifest.json')]
+  bundle = require('./dist/vue-ssr-server-bundle.json')   // 
+  clientManifest = require('./dist/vue-ssr-client-manifest.json')
+  const template = fs.readFileSync(templatePath, 'utf-8')  // 读取模板文件
+  renderer = createRenderer (bundle, {
+    template,
+    clientManifest
+  })
+  ctx.set('Content-Type', 'text/html')
+  ctx.body = 'ok'
+})
 router.get('*', isProd ? render : async (ctx, next) => {
   ctx.set('Content-Type', 'text/html')
   await readyPromise.then(() => render(ctx, next))
